@@ -1,2 +1,21 @@
 server:
   port: 8181
+  
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+    url: jdbc:h2:mem
+  jpa: 
+    show-sql: true
+    hibernate:
+      naming:
+        strategy: org.hibernate.cfg.DefaultNamingStrategy
+---
+spring:
+  profiles: cloud
+  datasource:
+   username: postgres
+   password: postgres
+   url: jdbc:postgresql://localhost:5432/test
