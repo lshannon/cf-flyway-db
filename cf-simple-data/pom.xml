@@ -9,7 +9,7 @@
 	<packaging>jar</packaging>
 
 	<name>cf-simple-data</name>
-	<description>JPA + H2 (in dev) + PostGres (in the Cloud)</description>
+	<description>JPA + H2 (in dev) + JPA + PostGres (in the Cloud)</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
