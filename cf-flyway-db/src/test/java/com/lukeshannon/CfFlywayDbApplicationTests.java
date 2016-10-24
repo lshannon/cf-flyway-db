@@ -7,16 +7,12 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.lukeshannon.model.Customer;
 import com.lukeshannon.repo.CustomerRepo;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@WebAppConfiguration
-//@DataJpaTest
-//@AutoConfigureTestDatabase(connection=EmbeddedDatabaseConnection.H2 )
 public class CfFlywayDbApplicationTests {
 
 	private static final String NAME = "Biff";
