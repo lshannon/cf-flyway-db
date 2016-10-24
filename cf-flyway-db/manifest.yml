@@ -1,0 +1,7 @@
+applications:
+- name: cf-flyway-db
+  memory: 1024M
+  buildpack: java_buildpack
+  domain: cfapps.io
+  services:
+    - flyway-test
