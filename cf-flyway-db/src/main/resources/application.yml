@@ -2,15 +2,12 @@ server:
   port: 8181
   
 spring:
-  jpa: 
-    show-sql: true
+  jpa:
     hibernate:
       naming:
         strategy: org.hibernate.cfg.DefaultNamingStrategy
----
-spring:
-  profiles: cloud
+    show-sql: true
   datasource:
-   username: postgres
-   password: postgres
-   url: jdbc:postgresql://localhost:5432/test
+    username: postgres
+    password: postgres
+    url: jdbc:postgresql://localhost:5432/test
