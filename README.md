@@ -2,13 +2,27 @@
 
 This started as an experiment to show how to use an embedded DB locally and a Postgres in the 'cloud' on PCF.
 
-However, after wrestling with this for a while I have come to a conclusion. Don't use embedded DB's for testing. Test against Postgres locally. Why? Here is what I experienced. There could be some user error here, so I might have to correct this.
+However, after wrestling with this for a while I have come to a conclusion.
+
+Don't use embedded DB's for testing. Test against Postgres locally.
+
+Why you ask, every sample I have seen uses an embedded DB?
+
+Well, here is what I experienced. There could be some user error here, so I might have to correct this.
 
 ## Reasons For Not Using an Embedded DB
 
 ### H2
 
-My development environment is Linux. Something strange was going on with H2 on Linux as can be seen with the error below. This worked fine with Mac, however not with Linux. I wrestled with this extensively and could not figure out a way around it, outside of setting up H2 outside of the test. Which sort of defeats the purpose of an Embedded DB.
+My development environment is Linux: https://github.com/lshannon/ASUS-K501U-Ubuntu-Set-Up
+
+Something strange was going on with H2 on Linux as can be seen with the class loading error below.
+
+The test cases ran fine on my Mac, however not with the Ubuntu Linux machine.
+
+I wrestled with this extensively and could not figure out a way around it (tried adding more Jars, playing with all the new Spring Boot 1.4.1 testing annotations, etc). I suppose one option might be to create the DB using API(s) in the set up of the test. Perhaps something to explore later.
+
+Here is the error:
 
 ```shell
 
