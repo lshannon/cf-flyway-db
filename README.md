@@ -2,9 +2,9 @@
 
 The goal of this sample is to show how develop locally on a JPA + Flyway Spring Boot application using H2. The deployment will be Postgres on the Cloud/PCF.
 
-My over all conclusion is to not use embedded DB's for testing. Test against Postgres locally. I will explain this at the end.
+My over all conclusion is to not use embedded DB's for development/ local testing. Test against Postgres locally. I will explain this at the end.
 
-But for now, here is how I decided which DB to use.
+But for now, here is how I decided H2 was the embedded DB I wanted to use.
 
 ## Selecting an Embedded DB
 
