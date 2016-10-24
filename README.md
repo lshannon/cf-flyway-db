@@ -1,26 +1,22 @@
-# Spring Boot + FlyWay + JPA + Postgres on PCF
+# Spring Boot + FlyWay + JPA + H2 (Dev) + Postgres on PCF
 
-This started as an experiment to show how to use an embedded DB locally and a Postgres in the 'cloud' on PCF.
+The goal of this sample is to show how develop locally on a JPA + Flyway Spring Boot application using H2. The deployment will be Postgres on the Cloud/PCF.
 
-However, after wrestling with this for a while I have come to a conclusion.
+My over all conclusion is to not use embedded DB's for testing. Test against Postgres locally. I will explain this at the end.
 
-Don't use embedded DB's for testing. Test against Postgres locally.
+But for now, here is how I decided which DB to use.
 
-Why you ask, every sample I have seen uses an embedded DB?
-
-Well, here is what I experienced. There could be some user error here, so I might have to correct this.
-
-## Reasons For Not Using an Embedded DB
+## Selecting an Embedded DB
 
 ### H2
 
 My development environment is Linux: https://github.com/lshannon/ASUS-K501U-Ubuntu-Set-Up
 
-Something strange was going on with H2 on Linux as can be seen with the class loading error below.
+Intially something strange was going on with H2 on Linux as can be seen with the class loading error below.
 
-The test cases ran fine on my Mac, however not with the Ubuntu Linux machine.
+I wrestled with this extensively and could not figure out a way around it (tried adding more Jars, playing with all the new Spring Boot 1.4.1 testing annotations, etc).
 
-I wrestled with this extensively and could not figure out a way around it (tried adding more Jars, playing with all the new Spring Boot 1.4.1 testing annotations, etc). I suppose one option might be to create the DB using API(s) in the set up of the test. Perhaps something to explore later.
+Sadly it turned out to be a corrupt Jar in my local Maven repo (thanks to Stephane Nicol of the Spring team for pointing out the obvious)
 
 Here is the error:
 
@@ -162,13 +158,36 @@ Caused by: java.lang.IllegalStateException: Cannot determine embedded database f
 	at org.apache.maven.surefire.booter.ForkedBooter.invokeProviderInSameClassLoader(ForkedBooter.java:203)
 	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:155)
 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:103)
+```
+Once I deleted the corrupt jar and down loaded a new one, the test successed.
 
+#### Configuring H2 for Test
+
+In my application.yml I have a profile for Cloud and nothing in the way of a Data Source for 'default'.
+
+```yml
+
+spring:
+  jpa:
+    hibernate:
+      naming:
+        strategy: org.hibernate.cfg.DefaultNamingStrategy
+    show-sql: true
+  datasource:
+    username: postgres
+    password: postgres
+    url: jdbc:postgresql://localhost:5432/test
+  profiles:
+    active: cloud
 
 ```
+When the Spring Boot application is pushed up the credentials in the from the Postgres managed DB in PCF are injected into the datasource values in the Cloud.
+
+H2 is the winning option.
 
 ### Derby
 
-With the Derby the classpath issues disapear. Derby starts right up when the test starts. However, Derby does not have the SQL support one might hope for. Specifically IF EXIST is missing.
+Derby does not have the SQL support one might hope for. Specifically IF EXIST is missing. If feel like this could be common in Flyway migrations. Derby is out.
 
 ```shell
 
@@ -252,7 +271,7 @@ Caused by: org.apache.derby.iapi.error.StandardException: Syntax error: Encounte
 
 ### HSQL
 
-Just like Derby this started up fine, however, once again SQL support was lacking. I like to use the Serial type for my Domain objects. It seems to work great with Postgres Sequences, which the flyway script can generate.
+With HSQL, again SQL support was lacking. I like to use the Serial type for my Domain objects. It seems to work great with Postgres Sequences, which the flyway script can generate.
 
 ```shell
 
@@ -273,9 +292,9 @@ Statement  : CREATE TABLE customer (
 
 ### Conclusion
 
-In the end it made sense to just use Postgres for Dev and Cloud. Yes, I have to install a DB, but its a minor pain compared to all the classpath wrestling and annotation wraggling.
+H2 works well, but to make like easier I would be tempted to just have Postgres in the application.yml and remove the embedded databases from the pom.xml file.
 
-Here are few other benifits:
+Here is why I like to test on Postgres:
 
 1. With a persistent DB I was able to configure the maven flyway plugin. This allows me to run some of those commands, such as 'clean'
 
@@ -293,11 +312,10 @@ Here are few other benifits:
 </plugin>
 ```
 
-2. SQL scripts have a higher likely hood of working in the Cloud having developed them against Postgres locally
+2. SQL scripts have a higher likely hood of working in the Cloud having developed them against Postgres locally. I am not too confident with Embedded SQL support vs what Postgres can do
 
 3. Having a persistent DB gives me a chance to inspect after the test with commonly used DB tool (PgAdmin for example)
 
-Better developers may have another way, I would love to hear it, but for me (on this particular deadline) this is perfect.
 
 
 
