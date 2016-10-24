@@ -5,9 +5,9 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
 import com.lukeshannon.model.Customer;
 import com.lukeshannon.repo.CustomerRepo;
 
@@ -16,9 +16,6 @@ import com.lukeshannon.repo.CustomerRepo;
 public class CfFlywayDbApplicationTests {
 
 	private static final String NAME = "Biff";
-
-	@Autowired
-	private TestEntityManager entityManager;
 
 	@Autowired
 	private CustomerRepo customerRepo;
