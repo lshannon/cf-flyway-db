@@ -292,11 +292,29 @@ Statement  : CREATE TABLE customer (
 
 ### Conclusion
 
-H2 works well, but to make like easier I would be tempted to just have Postgres in the application.yml and remove the embedded databases from the pom.xml file.
+H2 works well, but to make life easier I would be tempted to just have Postgres in the application.yml and remove the embedded databases from the pom.xml file.
 
-Here is why I like to test on Postgres:
+```yml
 
-1. With a persistent DB I was able to configure the maven flyway plugin. This allows me to run some of those commands, such as 'clean'
+server:
+  port: 8181
+  
+spring:
+  jpa:
+    hibernate:
+      naming:
+        strategy: org.hibernate.cfg.DefaultNamingStrategy
+    show-sql: true
+  datasource:
+    username: postgres
+    password: postgres
+url: jdbc:postgresql://localhost:5432/test
+
+```
+
+Here is why I like to develop and locally test on Postgres:
+
+1. With a persistent DB I was able to configure the maven flyway plugin. This allows me to run some of those commands, such as 'clean',  'migrate' and more. Its pretty handy.
 
 ```shell
  <plugin>
@@ -312,9 +330,9 @@ Here is why I like to test on Postgres:
 </plugin>
 ```
 
-2. SQL scripts have a higher likely hood of working in the Cloud having developed them against Postgres locally. I am not too confident with Embedded SQL support vs what Postgres can do
+2. SQL scripts have a higher likely hood of working in the Cloud having developed them against Postgres locally. I am not too confident with Embedded SQL support vs what Postgres can do. As my flyway migration scripts advance, I feel the chance might increase that I run into issues.
 
-3. Having a persistent DB gives me a chance to inspect after the test with commonly used DB tool (PgAdmin for example)
+3. Having a persistent DB gives me a chance to inspect after the test with commonly used DB tool (PgAdmin for example). This is always handy.
 
 
 
