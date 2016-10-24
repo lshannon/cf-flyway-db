@@ -163,7 +163,7 @@ Once I deleted the corrupt jar and down loaded a new one, the test successed.
 
 #### Configuring H2 for Test
 
-In my application.yml I have a profile for Cloud and nothing in the way of a Data Source for 'default'.
+In my application.yml I have a profile for Cloud, and nothing in the way of a Data Source for 'default'. The result is Spring Boot detects H2 and configures a default H2 embedded DB to run the test against. Very slick.
 
 ```yml
 
@@ -181,9 +181,11 @@ spring:
     active: cloud
 
 ```
-When the Spring Boot application is pushed up the credentials in the from the Postgres managed DB in PCF are injected into the datasource values in the Cloud.
+When the Spring Boot application is pushed up to PCF, the credentials from the Postgres managed DB on PCF are injected into the Data Source values of the application. This results in the application connected to the managed DB, even though my local connection details are in the application.yml.
 
 H2 is the winning option.
+
+Here are the other options I tried and why I did not like them.
 
 ### Derby
 
@@ -271,7 +273,7 @@ Caused by: org.apache.derby.iapi.error.StandardException: Syntax error: Encounte
 
 ### HSQL
 
-With HSQL, again SQL support was lacking. I like to use the Serial type for my Domain objects. It seems to work great with Postgres Sequences, which the flyway script can generate.
+With HSQL, again SQL support was lacking. I like to use the Serial type for my Domain objects. It seems to work great with Postgres Sequences, which the flyway script can generate. I don't want to have to change my SQL approach for my production environment to work with an embedded test DB. Hsql is out.
 
 ```shell
 
