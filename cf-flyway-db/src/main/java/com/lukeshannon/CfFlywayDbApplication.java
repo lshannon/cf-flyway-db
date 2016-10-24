@@ -16,7 +16,7 @@ public class CfFlywayDbApplication {
 @RestController
 class HomeController {
 	
-	@RequestMapping("/s")
+	@RequestMapping("/")
 	public String home() {
 		return "Welcome. Endpoints are /v1/add/{name} and /v1/customers/{name";
 	}
